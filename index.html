@@ -41,10 +41,10 @@
   </header>
   <main class="main">
     <div class="container">
-      <div class="main__field">
+      <div class="main__field" id="main-field">
 
       </div>
-      <form class="main__form" action="">
+      <form class="main__form" action="" name="form">
         <textarea class="main__form-textarea" id="message" name="message" rows="4" cols="50"></textarea>
         <button class="main__form-btn" type="submit">Отправить</button>
       </form>
@@ -55,6 +55,41 @@
 
   </div>
 </div>
+
+<script>
+  let socket = new WebSocket("ws://localhost:8080");
+
+  socket.onopen = function(e) {
+    alert("[open] Соединение установлено");
+    alert("Отправляем данные на сервер");
+    let obj = {
+      "type": "message",
+      "message": "Текст сообщения"
+    }
+    socket.send(JSON.stringify(obj));
+  };
+
+  socket.onmessage = function(event) {
+    alert(`[message] Данные получены с сервера: ${event.data}`);
+  };
+
+  // отправка сообщения из формы
+  document.forms.form.onsubmit = function() {
+    let outgoingMessage = this.message.value;
+
+    socket.send(outgoingMessage);
+    return false;
+  };
+
+  // получение сообщения - отобразить данные в div#messages
+  socket.onmessage = function(event) {
+    let message = event.data;
+
+    let messageElem = document.createElement('div');
+    messageElem.textContent = message;
+    document.getElementById('main-field').prepend(messageElem);
+  }
+</script>
 
 
 </body>

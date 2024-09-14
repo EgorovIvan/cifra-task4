@@ -38,7 +38,7 @@
 <div id="app">
   <main class="main">
     <div class="container">
-      <form class="form-auth" id="form-auth">
+      <form class="form-auth" id="form-auth" name="form-auth">
         <label class="form-auth__text" for="login">Имя пользователя</label>
         <input class="form-auth__input" type="text" name="login" id="login" placeholder="ввести имя">
         <label class="form-auth__text" for="password">Пароль</label>
@@ -54,20 +54,70 @@
 </div>
 
 <script>
-  let formAuth = document.getElementById('form-auth')
+  // let formAuth = document.getElementById('form-auth')
+  //
+  // formAuth.addEventListener('submit', () => {
+  //   axios.post('http://localhost:8080/', {
+  //     "user": '"user1"',
+  //     "password":"password1"
+  //   })
+  //           .then(function (response) {
+  //             console.log(response);
+  //           })
+  //           .catch(function (error) {
+  //             console.log(error);
+  //           });
+  // })
 
-  formAuth.addEventListener('submit', () => {
-    axios.post('http://localhost:8080/', {
-      "user": '"user1"',
-      "password":"password1"
-    })
-            .then(function (response) {
-              console.log(response);
-            })
-            .catch(function (error) {
-              console.log(error);
-            });
-  })
+  // const connection = new WebSocket('ws://localhost:8080');
+  // connection.onopen = () => {
+  //   console.log('WebSocket connection is open');
+  // }
+  // connection.onerror = (error) => {
+  //   console.error('WebSocket error', error);
+  // }
+  // connection.onmessage = (e) => {
+  //   console.log(`Message from server: ${e.data}`);
+  // }
+
+  let formAuth = document.getElementById('form-auth')
+  let socket = new WebSocket("ws://localhost:8080");
+
+  formAuth.onsubmit = function() {
+    alert("[open] Соединение установлено");
+    alert("Отправляем данные на сервер");
+    let login = this.login.value;
+    let password = this.password.value;
+
+    let authObj = {
+      "type": "auth",
+      "username": login,
+      "password": password
+    }
+
+    console.log(authObj)
+    socket.send(JSON.stringify(authObj));
+    return false;
+  };
+
+  socket.onmessage = function(event) {
+    alert(`[message] Данные получены с сервера: ${event.data}`);
+  };
+
+  socket.onclose = function(event) {
+    if (event.wasClean) {
+      alert(`[close] Соединение закрыто чисто, код=${event.code} причина=${event.reason}`);
+    } else {
+      // например, сервер убил процесс или сеть недоступна
+      // обычно в этом случае event.code 1006
+      alert('[close] Соединение прервано');
+    }
+  };
+
+  socket.onerror = function(error) {
+    alert(`[error]`);
+  };
+
 
 </script>
 
