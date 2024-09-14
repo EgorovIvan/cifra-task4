@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Авторизация</title>
+  <meta name="description" content="Удобный сайт для записи в мед учреждение">
+
+  <meta property="og:title" content="">
+  <meta property="og:type" content="">
+  <meta property="og:url" content="">
+  <meta property="og:image" content="">
+  <meta property="og:image:alt" content="">
+
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon.png">
+
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="theme-color" content="#fafafa">
+  <!-- fonts -->
+  <link rel="stylesheet" href="fonts/HelveticaNeueCyr.css">
+
+  <!-- styles -->
+  <link rel="stylesheet/less" href="less/style.less">
+
+  <!-- libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/less"></script>
+
+  <!-- scripts -->
+
+
+</head>
+
+<body>
+<div id="app">
+  <main class="main">
+    <div class="container">
+      <form class="form-auth" id="form-auth">
+        <label class="form-auth__text" for="login">Имя пользователя</label>
+        <input class="form-auth__input" type="text" name="login" id="login" placeholder="ввести имя">
+        <label class="form-auth__text" for="password">Пароль</label>
+        <input class="form-auth__input" type="text" name="password" id="password" placeholder="ввести пароль">
+        <button class="form-auth__btn" type="submit">Авторизоваться</button>
+      </form>
+    </div>
+  </main>
+
+  <div class="modal" style="display: none" id="modal">
+
+  </div>
+</div>
+
+<script>
+  let formAuth = document.getElementById('form-auth')
+
+  formAuth.addEventListener('submit', () => {
+    axios.post('http://localhost:8080/', {
+      "user": '"user1"',
+      "password":"password1"
+    })
+            .then(function (response) {
+              console.log(response);
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+  })
+
+</script>
+
+</body>
+
+</html>
